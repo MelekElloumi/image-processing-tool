@@ -1,9 +1,19 @@
-from stats import *
 from ImagePgm import ImagePgm
 import matplotlib.pyplot as plt
 
-image=ImagePgm("input\\examplePGM1.pgm")
-print(len(image.pixels[0]))
-plt.imshow(image.pixels,cmap='gray')
-plt.show()
+def showimage(imagepgm):
+    plt.imshow(imagepgm, cmap='gray')
+    plt.show()
+
+imagepgm=ImagePgm("input\\cours.pgm")
+print(imagepgm.graylevel,imagepgm.width,imagepgm.height)
+print(imagepgm.average())
+print(imagepgm.deviation())
+print(imagepgm.dynamic())
+print(imagepgm.entropy())
+print(imagepgm.histogram())
+print(imagepgm.cumulated_histogram())
+
+#showimage(imagepgm.pixels)
+#showimage(imagepgm.inverse())
 #image.write("output\\test.pgm")
