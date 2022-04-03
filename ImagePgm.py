@@ -1,6 +1,7 @@
 import imageIO
 import utils
 import math
+import random
 
 class ImagePgm:
 
@@ -85,7 +86,7 @@ class ImagePgm:
         LUT= [0] * (self.graylevel + 1)
         for g in range(self.graylevel + 1):
             LUT[g]=int(self.graylevel*cum_hist[g]/self.nbPixels())
-        new_image = self.image.copy()
+        new_image = [row[:] for row in self.image]
         for h in range(self.height):
             for w in range(self.width):
                 new_image[h][w]=LUT[self.image[h][w]]
@@ -94,7 +95,7 @@ class ImagePgm:
     def local_egalization(self,size):
         if (size%2==0):
             size+=1
-        new_image = self.image.copy()
+        new_image = [row[:] for row in self.image]
         for h in range(self.height):
             for w in range(self.width):
                 histc=0
@@ -107,11 +108,6 @@ class ImagePgm:
                 new_image[h][w] = int(self.graylevel * histc / nbp)
         return new_image
 
-
-
-
-
-
     def linear_transformation(self,points):
         LUT= [0] * (self.graylevel + 1)
         for p in range(1,len(points)):
@@ -119,7 +115,7 @@ class ImagePgm:
             intercept = points[p][1] - slope * points[p][0]
             for g in range(points[p-1][0],points[p][0]+1):
                 LUT[g]=int(slope*g+intercept)
-        new_image = self.image.copy()
+        new_image = [row[:] for row in self.image]
         for h in range(self.height):
             for w in range(self.width):
                 new_image[h][w] = LUT[new_image[h][w]]
@@ -158,7 +154,7 @@ class ImagePgm:
         return self.linear_transformation(points)
 
     def binarize(self):
-        new_image = self.image.copy()
+        new_image = [row[:] for row in self.image]
         for h in range(self.height):
             for w in range(self.width):
                 if(self.image[h][w]>self.graylevel/2):
@@ -167,5 +163,46 @@ class ImagePgm:
                     new_image[h][w] = 0
         return new_image
 
+    def noise(self):
+        new_image = [row[:] for row in self.image]
+        for h in range(self.height):
+            for w in range(self.width):
+                x = random.randint(0, 20)
+                if (x == 0):
+                    new_image[h][w] = 0
+                if (x == 20):
+                    new_image[h][w] = self.graylevel
+        return new_image
 
+    def filter_median(self,size):
+        if (size%2==0):
+            size+=1
+        new_image = new_image = [row[:] for row in self.image]
+        for h in range(self.height):
+            for w in range(self.width):
+                medians=[]
+                for py in range(max(0,h-size//2),min(self.height,h+size//2+1)):
+                    for px in range(max(0, w - size // 2), min(self.width, w + size // 2 + 1)):
+                        medians.append(self.image[py][px])
+                medians.sort()
+                new_image[h][w] = medians[len(medians)//2+1]
+        return new_image
 
+    def convolution(self,filter,size):
+        new_image = [row[:] for row in self.image]
+        for h in range(self.height):
+            for w in range(self.width):
+                conv=0
+                for py in range(-size // 2, size // 2 +1):
+                    if not (((py+h)< 0) or ((py+h) >= self.height)):
+                        for px in range(-size // 2, size // 2 +1):
+                            if not (((px+w) < 0) or ((px+w) >= self.width)):
+                                conv+=self.image[py+h][px+w]*filter[py+size//2][px+size//2]
+                new_image[h][w] = int(conv)
+        return new_image
+
+    def filter_average(self,size):
+        if (size%2==0):
+            size+=1
+        filter = [[1/size**2 for i in range(size)] for j in range(size)]
+        return self.convolution(filter,size)
