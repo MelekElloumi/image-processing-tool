@@ -221,3 +221,21 @@ class ImagePgm:
             for px in range(-center, center +1):
                 filter[py + center][px + center]/=sum
         return self.convolution(filter,size)
+
+    def filter_highboost(self,size):
+        image_low=self.filter_average(size)
+        new_image = [row[:] for row in self.image]
+        for h in range(self.height):
+            for w in range(self.width):
+                new_image[h][w]=abs(self.image[h][w]-image_low[h][w])
+        return new_image
+
+    def filter_high(self,size=3):
+        if (size % 2 == 0):
+            size += 1
+        filter=[[-1,-1,-1],[-1,9,-1],[-1,-1,-1]]
+        return self.convolution(filter,size)
+
+    def filter_laplace(self):
+        filter=[[0,-1,0],[-1,5,-1],[0,-1,0]]
+        return self.convolution(filter,3)
