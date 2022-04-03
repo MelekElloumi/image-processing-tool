@@ -206,3 +206,18 @@ class ImagePgm:
             size+=1
         filter = [[1/size**2 for i in range(size)] for j in range(size)]
         return self.convolution(filter,size)
+
+    def filter_gauss(self,size):
+        if (size%2==0):
+            size+=1
+        filter = [[1 for i in range(size)] for j in range(size)]
+        sum=0
+        center=size//2
+        for py in range(-center, center +1):
+            for px in range(-center, center +1):
+                filter[py+center][px+center]=2**(center**2-abs(py)-abs(px))
+                sum+=filter[py+center][px+center]
+        for py in range(-center, center +1):
+            for px in range(-center, center +1):
+                filter[py + center][px + center]/=sum
+        return self.convolution(filter,size)
