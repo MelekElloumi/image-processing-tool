@@ -21,3 +21,18 @@ def readPGM(filepath):
         print('readPGM: error with '+ filepath + ': unsupported format')
     file.close()
     return None
+
+def writePGM(filepath,image):
+    #image is a tuple of (data,width,height,graylevel)
+    file = open(filepath, "w")
+    file.write("P2\n")
+    file.write("#output image created by image-processing-tool, Melek Elloumi\n")
+    file.write(str(image[1])+" "+str(image[2])+"\n")
+    file.write(str(image[3]))
+    for i in range(len(image[0])):
+        file.write(str(image[0][i])+"\t")
+        if((i+1)%17==0):
+            file.write("\n")
+    file.close()
+
+
