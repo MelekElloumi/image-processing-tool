@@ -58,3 +58,13 @@ def dynamic(image):
             dmax=g
             break
     return dmin,dmax
+
+def SNR(image):
+    avg=average(s.image_orig)
+    S=0
+    B=0
+    for h in range(s.height):
+        for w in range(s.width):
+            S+=(s.image_orig[h][w]-avg)**2
+            B+=(image[h][w]-s.image_orig[h][w])**2
+    return math.sqrt(S/B)
