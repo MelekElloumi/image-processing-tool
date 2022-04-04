@@ -1,3 +1,13 @@
+import settings as s
+import utils
+
+def read(filepath):
+    imagepgm = readPGM(filepath)
+    if (imagepgm == None):
+        print("File not found")
+    else:
+        data, s.width, s.height, s.graylevel = imagepgm[0], imagepgm[1], imagepgm[2], imagepgm[3]
+        s.image_orig = utils.arrayToMatrix(data, s.width, s.height)
 
 def readPGM(filepath):
     file = open(filepath,'r')
@@ -21,6 +31,10 @@ def readPGM(filepath):
         print('readPGM: error with '+ filepath + ': unsupported format')
     file.close()
     return None
+
+def write(filepath,image):
+    data=utils.matrixToArray(image, s.width, s.height)
+    writePGM(filepath, (data ,s.width, s.height, s.graylevel))
 
 def writePGM(filepath,image):
     #image is a tuple of (data,width,height,graylevel)
