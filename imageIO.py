@@ -2,35 +2,66 @@ import settings as s
 import utils
 
 def read(filepath):
-    imagepgm = readPGM(filepath)
-    if (imagepgm == None):
-        print("File not found")
+    type=readType(filepath)
+    if (type == None):
+        print('readType: error with ' + filepath + ': has wrong type')
+        return
+    if(type=="P2\n"):
+        imageread,s.width,s.height,s.graylevel=readPGMascii(filepath)
     else:
-        data, s.width, s.height, s.graylevel = imagepgm[0], imagepgm[1], imagepgm[2], imagepgm[3]
-        s.image_orig = utils.arrayToMatrix(data, s.width, s.height)
+        imageread,s.width,s.height,s.graylevel=readPGMbinary(filepath)
+    if (imageread == None):
+        print ('readPGM: error with ' + filepath + ': has wrong size')
+    else:
+        s.isread=True
+        s.image_orig = utils.arrayToMatrix(imageread, s.width, s.height)
 
-def readPGM(filepath):
-    file = open(filepath,'r')
-    #print(file.readline())
-    if file.readline() == "P2\n":
-        while True:
-            line = file.readline()
-            if line[0] != '#': break
-        dimx,dimy=line.split()
-        dimx,dimy=int(dimx),int(dimy)
-        nivg=int(file.readline())
-        data=[]
-        for line in file:
-            for num in line.split():
-                data.append(int(num))
-        if len(data) != dimx*dimy:
-            print ('readPGM: error with ' + filepath + ': has wrong size')
+def readType(filepath):
+    file = open(filepath, 'rb')
+    type = file.readline().decode()
+    if not (type == "P2\n" or type == "P5\n"):
         file.close()
-        return (data,dimx,dimy,nivg)
-    else:
-        print('readPGM: error with '+ filepath + ': unsupported format')
+        return None
     file.close()
-    return None
+    return type
+
+def readPGMascii(filepath):
+    file = open(filepath, 'r')
+    file.readline()
+    while True:
+        line = file.readline()
+        if line[0] != '#': break
+    dimx, dimy = line.split()
+    dimx, dimy = int(dimx), int(dimy)
+    nivg = int(file.readline())
+    imageread=[]
+    for line in file.readlines():
+        for num in line.split():
+            imageread.append(int(num))
+    if len(imageread) != dimx*dimy:
+        file.close()
+        return None,-1,-1,-1
+    file.close()
+    return imageread,dimx,dimy,nivg
+
+def readPGMbinary(filepath):
+    file = open(filepath, 'rb')
+    file.readline()
+    while True:
+        line = file.readline().decode()
+        if line[0] != '#': break
+    dimx, dimy = line.split()
+    dimx, dimy = int(dimx), int(dimy)
+    nivg = int(file.readline().decode())
+    print(nivg,dimx,dimy)
+    imageread = []
+    imageread = list(file.read(dimx * dimy))
+    print(len(imageread))
+    if len(imageread) != dimx * dimy:
+        file.close()
+        return None, -1, -1, -1
+    file.close()
+    return imageread, dimx, dimy, nivg
 
 def write(filepath,image):
     data=utils.matrixToArray(image, s.width, s.height)

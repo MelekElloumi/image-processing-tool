@@ -1,5 +1,6 @@
 import random
 
+
 def arrayToMatrix(Array, height, width):
     Matrix = []
     for w in range(width):

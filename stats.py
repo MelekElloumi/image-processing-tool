@@ -39,7 +39,8 @@ def entropy(image):
     ent=0
     for g in range(s.graylevel+1):
         p=hist[g]/nbPixels()
-        ent+=p*math.log2(1/p)
+        if(p!=0):
+            ent+=p*math.log2(1/p)
     return ent
 
 def dynamic(image):
