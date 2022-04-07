@@ -17,9 +17,14 @@ def read(filepath):
         s.image_orig = utils.arrayToMatrix(imageread, s.width, s.height)
 
 def readType(filepath):
-    file = open(filepath, 'rb')
-    type = file.readline().decode()
-    if not (type == "P2\n" or type == "P5\n"):
+    try:
+        file = open(filepath, 'r')
+        type = file.readline()
+    except UnicodeDecodeError:
+        file = open(filepath, 'rb')
+        type = file.readline().decode()
+    print(type)
+    if not ("P2" in type or "P5" in type):
         file.close()
         return None
     file.close()
@@ -65,18 +70,19 @@ def readPGMbinary(filepath):
 
 def write(filepath,image):
     data=utils.matrixToArray(image, s.width, s.height)
-    writePGM(filepath, (data ,s.width, s.height, s.graylevel))
+    writePGM(filepath, data)
 
 def writePGM(filepath,image):
     #image is a tuple of (data,width,height,graylevel)
     file = open(filepath, "w")
     file.write("P2\n")
     file.write("#output image created by image-processing-tool, Melek Elloumi\n")
-    file.write(str(image[1])+" "+str(image[2])+"\n")
-    file.write(str(image[3]))
-    for num in range(len(image[0])):
-        file.write(str(image[0][num])+"\t")
-        if((num+1)%100==0):
+    file.write(str(s.width)+" "+str(s.height)+"\n")
+    file.write(str(s.graylevel)+"\n")
+    for num in range(0,len(image)):
+        #file.write(str(num)+"\t")
+        file.write(str(image[num]))
+        if((num+1)%s.width==0):
             file.write("\n")
     file.close()
 

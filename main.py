@@ -8,6 +8,11 @@ import binary as b
 
 s.isread=False
 io.read("input\\melek.pgm")
+imagethresh=b.thresholding(s.image_orig)
+showimage(s.image_orig,"otsu threshold")
+showimage(imagethresh,"otsu threshold")
+#io.write("output\\ascii.txt",imageascii)
+"""
 print(s.graylevel,s.width,s.height)
 showimage(s.image_orig,"original")
 input("1-Press Enter to continue...")
@@ -45,4 +50,4 @@ input("8-Press Enter to continue...")
 filtered_image=f.filter_laplace(s.image_orig)
 showimage(filtered_image,"laplace")
 input("9-Press Enter to continue...")
-#image.write("output\\test.pgm")
+"""
