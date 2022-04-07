@@ -8,11 +8,16 @@ import binary as b
 
 s.isread=False
 io.read("input\\melek.pgm")
-imagethresh=b.thresholding(s.image_orig)
-showimage(s.image_orig,"otsu threshold")
-showimage(imagethresh,"otsu threshold")
-#io.write("output\\ascii.txt",imageascii)
+
 """
+imagebinary=b.thresholding(s.image_orig)
+imagedil=b.closing(imagebinary,5)
+imageop=b.opening(imagebinary,5)
+showimage(imagebinary,"binary")
+showimage(imagedil,"closing")
+showimage(imageop,"opening")
+#io.write("output\\ascii.txt",imageascii)
+
 print(s.graylevel,s.width,s.height)
 showimage(s.image_orig,"original")
 input("1-Press Enter to continue...")

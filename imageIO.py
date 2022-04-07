@@ -23,7 +23,6 @@ def readType(filepath):
     except UnicodeDecodeError:
         file = open(filepath, 'rb')
         type = file.readline().decode()
-    print(type)
     if not ("P2" in type or "P5" in type):
         file.close()
         return None
@@ -58,10 +57,8 @@ def readPGMbinary(filepath):
     dimx, dimy = line.split()
     dimx, dimy = int(dimx), int(dimy)
     nivg = int(file.readline().decode())
-    print(nivg,dimx,dimy)
     imageread = []
     imageread = list(file.read(dimx * dimy))
-    print(len(imageread))
     if len(imageread) != dimx * dimy:
         file.close()
         return None, -1, -1, -1

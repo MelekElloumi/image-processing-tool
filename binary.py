@@ -40,7 +40,6 @@ def thresholding(image):
         if (f<fmin):
             fmin=f
             thmin=i
-    print(thmin)
     return binarize(image,thmin)
 
 def ascii(image):
@@ -51,4 +50,37 @@ def ascii(image):
             new_image[h][w] = chars[new_image[h][w]//25]+" "
     return new_image
 
+def dilatation(image,size):
+    if (size%2==0):
+        size+=1
+    new_image = clone(image)
+    for h in range(s.height):
+        for w in range(s.width):
+            medians=[]
+            for py in range(max(0,h-size//2),min(s.height,h+size//2+1)):
+                for px in range(max(0, w - size // 2), min(s.width, w + size // 2 + 1)):
+                    medians.append(image[py][px])
+            medians.sort()
+            new_image[h][w] = medians[0]
+    return new_image
+
+def erosion(image,size):
+    if (size%2==0):
+        size+=1
+    new_image = clone(image)
+    for h in range(s.height):
+        for w in range(s.width):
+            medians=[]
+            for py in range(max(0,h-size//2),min(s.height,h+size//2+1)):
+                for px in range(max(0, w - size // 2), min(s.width, w + size // 2 + 1)):
+                    medians.append(image[py][px])
+            medians.sort()
+            new_image[h][w] = medians[len(medians)-1]
+    return new_image
+
+def closing(image,size):
+    return dilatation(erosion(image,size),size)
+
+def opening(image,size):
+    return erosion(dilatation(image,size),size)
 
