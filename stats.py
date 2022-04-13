@@ -68,4 +68,6 @@ def SNR(image):
         for w in range(s.width):
             S+=(s.image_orig[h][w]-avg)**2
             B+=(image[h][w]-s.image_orig[h][w])**2
+    if(B==0):
+        return 0.0
     return math.sqrt(S/B)

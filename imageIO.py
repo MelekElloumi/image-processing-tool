@@ -78,7 +78,7 @@ def writePGM(filepath,image):
     file.write(str(s.graylevel)+"\n")
     for num in range(0,len(image)):
         #file.write(str(num)+"\t")
-        file.write(str(image[num]))
+        file.write(str(image[num])+" ")
         if((num+1)%s.width==0):
             file.write("\n")
     file.close()
