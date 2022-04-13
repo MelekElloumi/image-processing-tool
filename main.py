@@ -1,58 +1,122 @@
-from interface import showimage
+
+from interface import Interface
 import settings as s
-import filters as f
-import imageIO as io
-import contrast as c
-import stats as st
-import binary as b
+import tkinter as tk
 
-s.isread=False
+mainWindow = tk.Tk()
+Interface(mainWindow)
+mainWindow.mainloop()
+
+
+"""
+def yellowButton_callback():
+    pass
+
+def blueButton_callback():
+    pass
+
+def pinkButton_callback():
+    pass
+
+def orangeButton_callback():
+    pass
+
+def noneButton_callback():
+    pass
+
+def displayImage(pixels):
+    arrayimg=np.array(pixels, dtype=np.uint8)
+    displayImage = Image.fromarray(arrayimg)
+    ImagetoDisplay = ImageTk.PhotoImage(displayImage)
+    showWindow.config(image=ImagetoDisplay)
+    showWindow.photo_ref = ImagetoDisplay
+    showWindow.pack()
+
+def importButton_callback():
+    io.read("input\\melek.pgm")
+    displayImage(s.image_orig)
+
+
+def saveButton_callback():
+    savefile = filedialog.asksaveasfile(defaultextension=".jpg")
+    outputImage.save(savefile)
+
+def closeButton_callback():
+    window.destroy()
+
+def brightness_callback(brightness_pos):
+    brightness_pos = float(brightness_pos)
+    print(brightness_pos)
+    global outputImage
+    enhancer = ImageEnhance.Brightness(s.image_orig)
+    outputImage = enhancer.enhance(brightness_pos)
+    displayImage(outputImage)
+
+def contrast_callback(contrast_pos):
+    contrast_pos = float(contrast_pos)
+    print(contrast_pos)
+    global outputImage
+    enhancer = ImageEnhance.Contrast(s.image_orig)
+    outputImage = enhancer.enhance(contrast_pos)
+    displayImage(outputImage)
+
+window = tk.Tk()
+screen_width = window.winfo_screenwidth()
+screen_height = window.winfo_screenheight()
+
+window.geometry(f'{screen_width}x{screen_height}')
+
+Frame1 = tk.Frame(window, height=20, width=200)
+Frame1.pack(anchor=tk.N)
+
+Frame2 = tk.Frame(window, height=20)
+Frame2.pack(anchor=tk.NW)
+
+Frame3 = tk.Frame(window, height=20)
+Frame3.pack(anchor=tk.N)
+
+importButton = tk.Button(Frame1, text="Import", padx=10, pady=5, command=importButton_callback)
+importButton.grid(row=0, column=0)
+
+saveButton = tk.Button(Frame1, text="Save", padx=10, pady=5, command=saveButton_callback)
+saveButton.grid(row=0, column=1)
+
+closeButton = tk.Button(Frame1, text="Close", padx=10, pady=5, command=closeButton_callback)
+closeButton.grid(row=0, column=2)
+
+brightnessSlider = tk.Scale(Frame2, label="Brightness", from_=0, to=2, orient=tk.HORIZONTAL, length=screen_width,
+                            resolution=0.1, command=brightness_callback)
+brightnessSlider.set(1)
+brightnessSlider.pack(anchor=tk.N)
+
+contrastSlider = tk.Scale(Frame2, label="Contrast", from_=0, to=2, orient=tk.HORIZONTAL, length=screen_width,
+                            command=contrast_callback, resolution=0.1)
+contrastSlider.set(1)
+contrastSlider.pack(anchor=tk.N)
+
+yellowButton = tk.Radiobutton(Frame3, text="Yellow", width=30, value=1, command=yellowButton_callback)
+yellowButton.grid(row=0, column=0)
+
+blueButton = tk.Radiobutton(Frame3, text="Blue", width=30, value=2, command=blueButton_callback)
+blueButton.grid(row=0, column=1)
+
+pinkButton = tk.Radiobutton(Frame3, text="Pink", width=30, value=3, command=pinkButton_callback)
+pinkButton.grid(row=0, column=2)
+
+orangeButton = tk.Radiobutton(Frame3, text="Orange", width=30, value=4, command=orangeButton_callback)
+orangeButton.grid(row=0, column=3)
+
+noneButton = tk.Radiobutton(Frame3, text="None", width=30, value=5, command=noneButton_callback)
+noneButton.grid(row=0, column=4)
+noneButton.select()
+
+showWindow = tk.Label(window)
+showWindow.pack()
+tk.mainloop()
+
+
 io.read("input\\melek.pgm")
+s.isread=False
 
 """
-imagebinary=b.thresholding(s.image_orig)
-imagedil=b.closing(imagebinary,5)
-imageop=b.opening(imagebinary,5)
-showimage(imagebinary,"binary")
-showimage(imagedil,"closing")
-showimage(imageop,"opening")
-#io.write("output\\ascii.txt",imageascii)
 
-print(s.graylevel,s.width,s.height)
-showimage(s.image_orig,"original")
-input("1-Press Enter to continue...")
-print(st.average(s.image_orig))
-print(st.deviation(s.image_orig))
-print(st.dynamic(s.image_orig))
-print(st.entropy(s.image_orig))
-print(st.histogram(s.image_orig))
-print(st.cumulated_histogram(s.image_orig))
-image_binarized=b.binarize(s.image_orig,0.5)
-showimage(image_binarized,"binarization")
-input("12-Press Enter to continue...")
-image_equalized=c.equalization(s.image_orig)
-showimage(image_equalized,"equalization")
-input("2-Press Enter to continue...")
-image_equalized=c.local_equalization(s.image_orig,5)
-showimage(image_equalized,"local equalization 5")
-input("3-Press Enter to continue...")
-image_equalized=c.dark_dilatation(s.image_orig)
-showimage(image_equalized,"dark dilatation")
-print(st.SNR(image_equalized))
-input("4-Press Enter to continue...")
-filtered_image=f.filter_median(s.image_orig,3)
-showimage(filtered_image,"median 3")
-input("5-Press Enter to continue...")
-filtered_image=f.filter_median(s.image_orig,17)
-showimage(filtered_image,"median 17")
-input("6-Press Enter to continue...")
-filtered_image=f.filter_average(s.image_orig,17)
-showimage(filtered_image,"average 17")
-input("7-Press Enter to continue...")
-filtered_image=f.filter_gauss(s.image_orig,17)
-showimage(filtered_image,"gauss 17")
-input("8-Press Enter to continue...")
-filtered_image=f.filter_laplace(s.image_orig)
-showimage(filtered_image,"laplace")
-input("9-Press Enter to continue...")
-"""

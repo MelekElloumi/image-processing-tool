@@ -56,12 +56,12 @@ def dilatation(image,size):
     new_image = clone(image)
     for h in range(s.height):
         for w in range(s.width):
-            medians=[]
+            mintab=[]
             for py in range(max(0,h-size//2),min(s.height,h+size//2+1)):
                 for px in range(max(0, w - size // 2), min(s.width, w + size // 2 + 1)):
-                    medians.append(image[py][px])
-            medians.sort()
-            new_image[h][w] = medians[0]
+                    mintab.append(image[py][px])
+            mintab.sort()
+            new_image[h][w] = mintab[0]
     return new_image
 
 def erosion(image,size):
@@ -70,12 +70,12 @@ def erosion(image,size):
     new_image = clone(image)
     for h in range(s.height):
         for w in range(s.width):
-            medians=[]
+            maxtab=[]
             for py in range(max(0,h-size//2),min(s.height,h+size//2+1)):
                 for px in range(max(0, w - size // 2), min(s.width, w + size // 2 + 1)):
-                    medians.append(image[py][px])
-            medians.sort()
-            new_image[h][w] = medians[len(medians)-1]
+                    maxtab.append(image[py][px])
+            maxtab.sort()
+            new_image[h][w] = maxtab[len(maxtab)-1]
     return new_image
 
 def closing(image,size):
