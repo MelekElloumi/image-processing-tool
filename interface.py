@@ -5,7 +5,6 @@ import contrast as c
 import stats as st
 import binary as b
 
-import matplotlib.pyplot as plt
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
@@ -17,8 +16,6 @@ import utils
 matplotlib.use('TkAgg')
 __author__ = 'Melek'
 
-def alert():
-    pass
 
 class Interface:
     def __init__(self, window):
@@ -27,8 +24,7 @@ class Interface:
         self.window.title('Image Processing Tool')
         self.menu_initialisation()
         self.window.geometry(f'{self.window.winfo_screenwidth() - 100}x{self.window.winfo_screenheight() - 100}+10+10')
-        self.currentimage=[]
-
+        self.currentimage = []
 
     def menu_initialisation(self):
         menubar = tk.Menu(self.window)
@@ -73,29 +69,33 @@ class Interface:
 
         self.window.config(menu=menubar)
 
-        Frametools = tk.Frame(self.window,width=self.window.winfo_screenwidth()*0.2)
+        Frametools = tk.Frame(self.window, width=self.window.winfo_screenwidth() * 0.2)
         Frametools.pack_propagate(0)
-        Frametools.pack(anchor=tk.W, side=tk.LEFT,fill=tk.Y, expand=tk.YES)
+        Frametools.pack(anchor=tk.W, side=tk.LEFT, fill=tk.Y, expand=tk.YES)
 
         FrameFile = tk.Frame(Frametools, height=100, width=100, pady=5)
         tk.Label(FrameFile, text="Image Path:").grid(row=0, column=0, padx=2)
         self.entry_text = tk.StringVar()
         self.entry_text.set("input/melek.pgm")
-        tk.Entry(FrameFile, width=30, textvariable = self.entry_text).grid(row=0, column=1, padx=10)
+        tk.Entry(FrameFile, width=30, textvariable=self.entry_text).grid(row=0, column=1, padx=10)
         FrameFile.pack(anchor=tk.NW)
 
         Frameopensave = tk.Frame(Frametools, height=100, width=100, pady=5)
-        tk.Button(Frameopensave, text="Open", padx=10, pady=5, command=self.openButton_callback).grid(row=0,column=0,padx=10)
-        tk.Button(Frameopensave, text="Save", padx=10, pady=5, command=self.saveButton_callback).grid(row=0,column=1,padx=10)
-        self.original_button=tk.Button(Frameopensave, text="Original", state=tk.DISABLED, padx=10, pady=5, command=self.originalButton_callback)
-        self.original_button.grid(row=0, column=2,padx=10)
+        tk.Button(Frameopensave, text="Open", padx=10, pady=5, command=self.openButton_callback).grid(row=0, column=0,
+                                                                                                      padx=10)
+        tk.Button(Frameopensave, text="Save", padx=10, pady=5, command=self.saveButton_callback).grid(row=0, column=1,
+                                                                                                      padx=10)
+        self.original_button = tk.Button(Frameopensave, text="Original", state=tk.DISABLED, padx=10, pady=5,
+                                         command=self.originalButton_callback)
+        self.original_button.grid(row=0, column=2, padx=10)
         Frameopensave.pack(anchor=tk.NW)
 
-        ttk.Separator(Frametools,orient='horizontal').pack(fill='x',pady=5)
+        ttk.Separator(Frametools, orient='horizontal').pack(fill='x', pady=5)
 
         Framesize = tk.Frame(Frametools, height=100, width=100, pady=5)
-        tk.Label(Framesize, text="Size of filters,local equalisation and binary operations:").grid(row=0, column=0, padx=10)
-        self.size_num = tk.Spinbox(Framesize, width=3, from_=3, to=29,increment=2)
+        tk.Label(Framesize, text="Size of filters,local equalisation and binary operations:").grid(row=0, column=0,
+                                                                                                   padx=10)
+        self.size_num = tk.Spinbox(Framesize, width=3, from_=3, to=29, increment=2)
         self.size_num.grid(row=0, column=2)
         Framesize.pack(anchor=tk.NW)
 
@@ -116,7 +116,7 @@ class Interface:
 
         Framepixel = tk.Frame(Frametools, height=100, width=100, pady=5)
         tk.Label(Framepixel, text="Number of pixels:").grid(row=0, column=0, padx=10)
-        self.pixel_text=tk.Label(Framepixel, text="0", width=15, relief=tk.SUNKEN)
+        self.pixel_text = tk.Label(Framepixel, text="0", width=15, relief=tk.SUNKEN)
         self.pixel_text.grid(row=0, column=2)
         Framepixel.pack(anchor=tk.NW)
 
@@ -125,55 +125,55 @@ class Interface:
 
         Frameaverage = tk.Frame(Frametools, height=100, width=100, pady=5)
         tk.Label(Frameaverage, text="Average:").grid(row=0, column=0, padx=10)
-        self.average_text=tk.Label(Frameaverage, text="0", width=25, relief=tk.SUNKEN)
+        self.average_text = tk.Label(Frameaverage, text="0", width=25, relief=tk.SUNKEN)
         self.average_text.grid(row=0, column=2)
         Frameaverage.pack(anchor=tk.NW)
 
         Framedeviation = tk.Frame(Frametools, height=100, width=100, pady=5)
         tk.Label(Framedeviation, text="Standard deviation:").grid(row=0, column=0, padx=10)
-        self.deviation_text=tk.Label(Framedeviation, text="0", width=25, relief=tk.SUNKEN)
+        self.deviation_text = tk.Label(Framedeviation, text="0", width=25, relief=tk.SUNKEN)
         self.deviation_text.grid(row=0, column=2)
         Framedeviation.pack(anchor=tk.NW)
 
         Frameentropy = tk.Frame(Frametools, height=100, width=100, pady=5)
         tk.Label(Frameentropy, text="Entropy:").grid(row=0, column=0, padx=10)
-        self.entropy_text=tk.Label(Frameentropy, text="0", width=25, relief=tk.SUNKEN)
+        self.entropy_text = tk.Label(Frameentropy, text="0", width=25, relief=tk.SUNKEN)
         self.entropy_text.grid(row=0, column=2)
         Frameentropy.pack(anchor=tk.NW)
 
         FrameSNR = tk.Frame(Frametools, height=100, width=100, pady=5)
         tk.Label(FrameSNR, text="SNR:").grid(row=0, column=0, padx=10)
-        self.SNR_text=tk.Label(FrameSNR, text="0", width=25, relief=tk.SUNKEN)
+        self.SNR_text = tk.Label(FrameSNR, text="0", width=25, relief=tk.SUNKEN)
         self.SNR_text.grid(row=0, column=2)
         FrameSNR.pack(anchor=tk.NW)
 
-        FrameHistogram= tk.Frame(Frametools, width=self.window.winfo_screenwidth() * 0.2,height=300, pady=5)
-        tk.Label(FrameHistogram, text="Histogram:").pack( padx=10)
+        FrameHistogram = tk.Frame(Frametools, width=self.window.winfo_screenwidth() * 0.2, height=300, pady=5)
+        tk.Label(FrameHistogram, text="Histogram:").pack(padx=10)
         self.fig2 = Figure(figsize=(6, 5), dpi=100)
         self.ax2 = self.fig2.add_subplot(111)
         canvas2 = FigureCanvasTkAgg(self.fig2, FrameHistogram)
         plot_widget2 = canvas2.get_tk_widget()
-        plot_widget2.config(width=self.window.winfo_screenwidth() * 0.2,height=300)
+        plot_widget2.config(width=self.window.winfo_screenwidth() * 0.2, height=300)
         plot_widget2.pack(expand=tk.YES, anchor=tk.CENTER, pady=5, padx=5)
         FrameHistogram.pack_propagate(0)
         FrameHistogram.pack(anchor=tk.NW)
 
         FrameConsole = tk.Frame(Frametools, height=100, width=100, pady=5)
         tk.Label(FrameConsole, text="Console:").pack()
-        self.console=tk.Text(FrameConsole, height=10, width=55,fg="red")
+        self.console = tk.Text(FrameConsole, height=10, width=55, fg="red")
         self.console.pack()
-        FrameConsole.pack(anchor=tk.S,side=tk.BOTTOM)
+        FrameConsole.pack(anchor=tk.S, side=tk.BOTTOM)
 
-        self.imageframe = tk.Frame(self.window,width=self.window.winfo_screenwidth()*0.8)
+        self.imageframe = tk.Frame(self.window, width=self.window.winfo_screenwidth() * 0.8)
         self.imageframe.pack_propagate(0)
-        self.imageframe.pack(side=tk.RIGHT,fill=tk.Y)
+        self.imageframe.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.fig1 = Figure(figsize=(6, 5), dpi=100)
-        self.ax1=self.fig1.add_subplot(111)
+        self.ax1 = self.fig1.add_subplot(111)
         canvas1 = FigureCanvasTkAgg(self.fig1, self.imageframe)
-        plot_widget=canvas1.get_tk_widget()
+        plot_widget = canvas1.get_tk_widget()
         plot_widget.config(width=self.window.winfo_screenwidth() * 0.7, height=self.window.winfo_screenheight())
-        plot_widget.pack(expand=tk.YES,anchor=tk.CENTER,pady=20, padx=20)
+        plot_widget.pack(expand=tk.YES, anchor=tk.CENTER, pady=20, padx=20)
 
     def updateStats(self):
         self.width_text.config(text=str(s.width))
@@ -188,14 +188,13 @@ class Interface:
 
     def displayImage(self):
         self.ax1.clear()
-        self.ax1.imshow(self.currentimage,cmap='gray')
+        self.ax1.imshow(self.currentimage, cmap='gray')
         self.fig1.canvas.draw()
 
     def displayHistogram(self):
         self.ax2.clear()
         self.ax2.plot(st.histogram(self.currentimage))
         self.fig2.canvas.draw()
-
 
     def openButton_callback(self):
         try:
@@ -204,16 +203,16 @@ class Interface:
             self.currentimage = s.image_orig.copy()
             self.updateStats()
             self.writeConsole("New image opened.\n")
-        #except Exception:
-            #self.writeConsole('readError: error with ' + self.entry_text.get() + ': has wrong type or size.\n')
+        except Exception:
+            self.writeConsole('readError: error with ' + self.entry_text.get() + ': has wrong type or size.\n')
         except FileNotFoundError:
             self.writeConsole("File not found, try again.\n")
 
     def saveButton_callback(self):
-        io.write(self.entry_text.get(),self.currentimage)
+        io.write(self.entry_text.get(), self.currentimage)
         self.writeConsole("Image saved.\n")
 
-    def writeConsole(self,text):
+    def writeConsole(self, text):
         self.console.config(state=tk.NORMAL)
         self.console.insert(tk.END, text)
         self.console.config(state=tk.NORMAL)
@@ -229,7 +228,7 @@ class Interface:
         self.writeConsole("Equalisation applied.\n")
 
     def local_equalisation_callback(self):
-        self.currentimage = c.local_equalization(self.currentimage,int(self.size_num.get()))
+        self.currentimage = c.local_equalization(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Local equalisation applied.\n")
 
@@ -254,22 +253,22 @@ class Interface:
         self.writeConsole("Inversion applied.\n")
 
     def median_callback(self):
-        self.currentimage = f.filter_median(self.currentimage,int(self.size_num.get()))
+        self.currentimage = f.filter_median(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Median filter applied.\n")
 
     def average_callback(self):
-        self.currentimage = f.filter_average(self.currentimage,int(self.size_num.get()))
+        self.currentimage = f.filter_average(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Average filter applied.\n")
 
     def gaussian_callback(self):
-        self.currentimage = f.filter_gauss(self.currentimage,int(self.size_num.get()))
+        self.currentimage = f.filter_gauss(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Gaussian filter applied.\n")
 
     def high_boost_callback(self):
-        self.currentimage = f.filter_highboost(self.currentimage,int(self.size_num.get()))
+        self.currentimage = f.filter_highboost(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("High boost filter applied.\n")
 
@@ -279,12 +278,12 @@ class Interface:
         self.writeConsole("Laplace filter applied.\n")
 
     def prewitth_callback(self):
-        self.currentimage = f.filter_prewitt_h(self.currentimage,int(self.size_num.get()))
+        self.currentimage = f.filter_prewitt_h(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Prewitt horizontal filter applied.\n")
 
     def prewittv_callback(self):
-        self.currentimage = f.filter_prewitt_v(self.currentimage,int(self.size_num.get()))
+        self.currentimage = f.filter_prewitt_v(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Prewitt vertical filter applied.\n")
 
@@ -294,40 +293,36 @@ class Interface:
         self.writeConsole("Thresholding applied.\n")
 
     def dilatation_callback(self):
-        self.currentimage = b.dilatation(self.currentimage,int(self.size_num.get()))
+        self.currentimage = b.dilatation(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Dilatation applied.\n")
 
     def erosion_callback(self):
-        self.currentimage = b.erosion(self.currentimage,int(self.size_num.get()))
+        self.currentimage = b.erosion(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Erosion applied.\n")
 
     def closing_callback(self):
-        self.currentimage = b.closing(self.currentimage,int(self.size_num.get()))
+        self.currentimage = b.closing(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Closing applied.\n")
 
     def opening_callback(self):
-        self.currentimage = b.opening(self.currentimage,int(self.size_num.get()))
+        self.currentimage = b.opening(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Opening applied.\n")
 
     def noise_callback(self):
-        self.currentimage = utils.noise(self.currentimage,s.width,s.height,s.graylevel)
+        self.currentimage = utils.noise(self.currentimage, s.width, s.height, s.graylevel)
         self.updateStats()
         self.writeConsole("Noise applied.\n")
 
     def ascii_callback(self):
-        asciiimage = utils.ascii(self.currentimage,s.width,s.height)
-        io.write("output\\ascii.txt",asciiimage)
+        asciiimage = utils.ascii(self.currentimage, s.width, s.height)
+        io.write("output\\ascii.txt", asciiimage)
         self.writeConsole("ascii.txt saved in output folder.\n")
 
     def QuitMenuButton_callback(self):
         self.window.destroy()
 
 
-def showimage(image,title):
-    plt.imshow(image, cmap='gray')
-    plt.title(title)
-    plt.show()
