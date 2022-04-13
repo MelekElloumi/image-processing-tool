@@ -31,3 +31,11 @@ def noise(Matrix, height, width, val):
             if (x == 20):
                 new_Matrix[h][w] = val
     return new_Matrix
+
+def ascii(image,width,height):
+    new_image = clone(image)
+    chars = ["B", "S", "#", "&", "@", "$", "%", "*", "!", ":", "."]
+    for h in range(height):
+        for w in range(width):
+            new_image[h][w] = chars[new_image[h][w]//25]+" "
+    return new_image

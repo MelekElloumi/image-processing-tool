@@ -42,14 +42,6 @@ def thresholding(image):
             thmin=i
     return binarize(image,thmin)
 
-def ascii(image):
-    new_image = clone(image)
-    chars = ["B", "S", "#", "&", "@", "$", "%", "*", "!", ":", "."]
-    for h in range(s.height):
-        for w in range(s.width):
-            new_image[h][w] = chars[new_image[h][w]//25]+" "
-    return new_image
-
 def dilatation(image,size):
     if (size%2==0):
         size+=1
