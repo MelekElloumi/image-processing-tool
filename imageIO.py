@@ -4,14 +4,13 @@ import utils
 def read(filepath):
     type=readType(filepath)
     if (type == None):
-        print('readType: error with ' + filepath + ': has wrong type')
-        return
+        raise Exception
     if(type=="P2\n"):
         imageread,s.width,s.height,s.graylevel=readPGMascii(filepath)
     else:
         imageread,s.width,s.height,s.graylevel=readPGMbinary(filepath)
     if (imageread == None):
-        print ('readPGM: error with ' + filepath + ': has wrong size')
+        raise Exception
     else:
         s.isread=True
         s.image_orig = utils.arrayToMatrix(imageread, s.width, s.height)
@@ -66,7 +65,7 @@ def readPGMbinary(filepath):
     return imageread, dimx, dimy, nivg
 
 def write(filepath,image):
-    data=utils.matrixToArray(image, s.width, s.height)
+    data=utils.matrixToArray(image,s.height, s.width )
     writePGM(filepath, data)
 
 def writePGM(filepath,image):

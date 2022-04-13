@@ -26,6 +26,10 @@ def convolution(image,filter,size):
                     for px in range(-size // 2, size // 2 +1):
                         if not (((px+w) < 0) or ((px+w) >= s.width)):
                             conv+=image[py+h][px+w]*filter[py+size//2][px+size//2]
+            if(conv<0):
+                conv=0
+            if(conv>s.graylevel):
+                conv=s.graylevel
             new_image[h][w] = int(conv)
     return new_image
 

@@ -21,7 +21,7 @@ def matrixToArray(Matrix, height, width ):
 def clone(Matrix):
     return [row[:] for row in Matrix]
 
-def noise(Matrix, height, width, val):
+def noise(Matrix,width, height,  val):
     new_Matrix = clone(Matrix)
     for h in range(height):
         for w in range(width):
@@ -37,5 +37,5 @@ def ascii(image,width,height):
     chars = ["B", "S", "#", "&", "@", "$", "%", "*", "!", ":", "."]
     for h in range(height):
         for w in range(width):
-            new_image[h][w] = chars[new_image[h][w]//25]+" "
+            new_image[h][w] = chars[new_image[h][w]//25]
     return new_image
