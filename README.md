@@ -9,7 +9,7 @@
 - It's made with python tkinter
 - Images and histograms are shown using matplotlib.Figure.
 - The image statistics are automatically calculated after each operation.
-- Clicking on the compile buton launches miniJava.exe and compiles the code in the Code Textbox and shows the lexical and syntaxic errors in the Console Textbox.
+
 ### Execution:
 ![2014-10-22 11_35_09](https://media1.giphy.com/media/3lRoMhENgQhoWJ8MfJ/giphy.gif?cid=790b7611fd80a93158743023960bfac43c7088f922f64f92&rid=giphy.gif&ct=g)
 
