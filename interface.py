@@ -48,8 +48,7 @@ class Interface:
         menuFilter.add_command(label="High_boost", command=self.high_boost_callback)
         menuFilter.add_command(label="Laplace", command=self.laplace_callback)
         menuFilter.add_separator()
-        menuFilter.add_command(label="Prewitt H", command=self.prewitth_callback)
-        menuFilter.add_command(label="Prewitt V", command=self.prewittv_callback)
+        menuFilter.add_command(label="Prewitt", command=self.prewitt_callback)
         menubar.add_cascade(label="Filters", menu=menuFilter)
 
         menuBinary = tk.Menu(menubar, tearoff=0)
@@ -312,19 +311,12 @@ class Interface:
         self.updateStats()
         self.writeConsole("Laplace filter applied.\n")
 
-    def prewitth_callback(self):
+    def prewitt_callback(self):
         self.previousimage = self.currentimage
         self.undo_button.config(state=tk.NORMAL)
-        self.currentimage = f.filter_prewitt_h(self.currentimage, int(self.size_num.get()))
+        self.currentimage = f.filter_prewitt(self.currentimage, int(self.size_num.get()))
         self.updateStats()
-        self.writeConsole("Prewitt horizontal filter applied.\n")
-
-    def prewittv_callback(self):
-        self.previousimage = self.currentimage
-        self.undo_button.config(state=tk.NORMAL)
-        self.currentimage = f.filter_prewitt_v(self.currentimage, int(self.size_num.get()))
-        self.updateStats()
-        self.writeConsole("Prewitt vertical filter applied.\n")
+        self.writeConsole("Prewitt filter applied.\n")
 
     def thresholding_callback(self):
         self.previousimage = self.currentimage

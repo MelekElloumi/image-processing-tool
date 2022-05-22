@@ -77,15 +77,20 @@ def filter_laplace(image):
     return convolution(image, filter, 3)
 
 
-def filter_prewitt_h(image, size):
+def filter_prewitt(image, size):
+    new_image = clone(image)
     if (size % 2 == 0):
         size += 1
-    filter = [[i for i in range(-size // 2, size // 2 + 1)] for j in range(size)]
-    return convolution(image, filter, size)
-
-
-def filter_prewitt_v(image, size):
-    if (size % 2 == 0):
-        size += 1
-    filter = [[j for i in range(0, size)] for j in range(-size // 2, size // 2 + 1)]
-    return convolution(image, filter, size)
+    filterh = [[i for i in range(-size // 2, size // 2 + 1)] for j in range(size)]
+    filterv = [[j for i in range(0, size)] for j in range(-size // 2, size // 2 + 1)]
+    prewitth= convolution(image, filterh, size)
+    prewittv = convolution(image, filterv, size)
+    for h in range(s.height):
+        for w in range(s.width):
+            conv=(prewitth[h][w]**2 + prewittv[h][w]**2)**0.5
+            if (conv < 0):
+                conv = 0
+            if (conv > s.graylevel):
+                conv = s.graylevel
+            new_image[h][w]=int(conv)
+    return new_image
