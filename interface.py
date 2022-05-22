@@ -28,9 +28,9 @@ class Interface:
         self.previousimage = []
 
     def menu_initialisation(self):
-        menubar = tk.Menu(self.window)
+        self.menubar = tk.Menu(self.window)
 
-        menuContrast = tk.Menu(menubar, tearoff=0)
+        menuContrast = tk.Menu(self.menubar, tearoff=0)
         menuContrast.add_command(label="Equalisation", command=self.equalisation_callback)
         menuContrast.add_command(label="Local Equalisation", command=self.local_equalisation_callback)
         menuContrast.add_separator()
@@ -38,9 +38,11 @@ class Interface:
         menuContrast.add_command(label="Light Dilatation", command=self.lightd_callback)
         menuContrast.add_command(label="Middle Dilatation", command=self.middled_callback)
         menuContrast.add_command(label="Inverse", command=self.inverse_callback)
-        menubar.add_cascade(label="Contrast", menu=menuContrast)
+        menuContrast.add_separator()
+        menuContrast.add_command(label="Manual Transformation", command=self.manual_transformation_window_callback)
+        self.menubar.add_cascade(label="Contrast", menu=menuContrast)
 
-        menuFilter = tk.Menu(menubar, tearoff=0)
+        menuFilter = tk.Menu(self.menubar, tearoff=0)
         menuFilter.add_command(label="Median", command=self.median_callback)
         menuFilter.add_command(label="Average", command=self.average_callback)
         menuFilter.add_command(label="Gaussian", command=self.gaussian_callback)
@@ -49,9 +51,9 @@ class Interface:
         menuFilter.add_command(label="Laplace", command=self.laplace_callback)
         menuFilter.add_separator()
         menuFilter.add_command(label="Prewitt", command=self.prewitt_callback)
-        menubar.add_cascade(label="Filters", menu=menuFilter)
+        self.menubar.add_cascade(label="Filters", menu=menuFilter)
 
-        menuBinary = tk.Menu(menubar, tearoff=0)
+        menuBinary = tk.Menu(self.menubar, tearoff=0)
         menuBinary.add_command(label="Manual Thresholding", command=self.manualthresholding_callback)
         menuBinary.add_command(label="Thresholding", command=self.thresholding_callback)
         menuBinary.add_separator()
@@ -59,16 +61,16 @@ class Interface:
         menuBinary.add_command(label="Erosion", command=self.erosion_callback)
         menuBinary.add_command(label="Closing", command=self.closing_callback)
         menuBinary.add_command(label="Opening", command=self.opening_callback)
-        menubar.add_cascade(label="Binary", menu=menuBinary)
+        self.menubar.add_cascade(label="Binary", menu=menuBinary)
 
-        menuOther = tk.Menu(menubar, tearoff=0)
+        menuOther = tk.Menu(self.menubar, tearoff=0)
         menuOther.add_command(label="Add noise", command=self.noise_callback)
         menuOther.add_command(label="Generate Ascii art", command=self.ascii_callback)
-        menubar.add_cascade(label="Other", menu=menuOther)
+        self.menubar.add_cascade(label="Other", menu=menuOther)
 
-        menubar.add_command(label="Quit", command=self.QuitMenuButton_callback)
+        self.menubar.add_command(label="Quit", command=self.QuitMenuButton_callback)
 
-        self.window.config(menu=menubar)
+        self.window.config(menu=self.menubar)
 
         Frametools = tk.Frame(self.window, width=self.window.winfo_screenwidth() * 0.2)
         Frametools.pack_propagate(0)
@@ -284,6 +286,74 @@ class Interface:
         self.currentimage = c.inverse(self.currentimage)
         self.updateStats()
         self.writeConsole("Inversion applied.\n")
+
+    def manual_transformation_window_callback(self):
+        self.points=[]
+        self.manualWindow=tk.Toplevel(self.window)
+        self.manualWindow.title('Manual Contrast Transformation')
+        self.manualWindow.geometry("700x500")
+        Framemain = tk.Frame(self.manualWindow)
+        Framemain.pack_propagate(0)
+        Framemain.pack(anchor=tk.W, side=tk.LEFT, fill=tk.BOTH, expand=tk.YES)
+
+        Framepoint = tk.Frame(Framemain, height=100, width=100, pady=5)
+        tk.Label(Framepoint, text="Old value (X): ").grid(row=0, column=0, padx=2)
+        self.entry_X = tk.IntVar()
+        self.entry_X.set(0)
+        tk.Entry(Framepoint, width=5, textvariable=self.entry_X).grid(row=0, column=1, padx=10)
+        tk.Label(Framepoint, text="New value (Y): ").grid(row=0, column=2, padx=2)
+        self.entry_Y = tk.IntVar()
+        self.entry_Y.set(0)
+        tk.Entry(Framepoint, width=5, textvariable=self.entry_Y).grid(row=0, column=3, padx=10)
+        point_button = tk.Button(Framepoint, text="Add point", padx=10, pady=5,
+                                  command=self.add_point_callback).grid(row=0, column=4, padx=10)
+        Framepoint.pack()
+
+        self.fig3 = Figure(figsize=(6, 5), dpi=100)
+        self.ax3 = self.fig3.add_subplot(111)
+        self.ax3.set_xlim([0, s.graylevel])
+        self.ax3.set_ylim([0, s.graylevel])
+        canvas3 = FigureCanvasTkAgg(self.fig3, Framemain)
+        plot_widget3 = canvas3.get_tk_widget()
+        plot_widget3.config(width=600, height=300)
+        plot_widget3.pack(expand=tk.YES, anchor=tk.CENTER, pady=5, padx=5)
+
+        tk.Button(Framemain, text="Submit", padx=10, pady=5,
+                                         command=self.submit_callback).pack()
+
+    def add_point_callback(self):
+        x=self.entry_X.get()
+        y=self.entry_Y.get()
+        if (x not in range(0,s.graylevel+1) or y not in range(0,s.graylevel+1)):
+            return
+        self.points.append([x,y])
+        self.points.sort()
+        pointX=[x[0] for x in self.points]
+        pointY=[y[1] for y in self.points]
+        self.ax3.clear()
+        self.ax3.set_xlim([0,s.graylevel])
+        self.ax3.set_ylim([0, s.graylevel])
+        self.ax3.plot(pointX,pointY,color='red', marker='o')
+        self.ax3.grid(True)
+        self.fig3.canvas.draw()
+
+    def submit_callback(self):
+        if len(self.points)==0:
+            self.points=[[0,0],[255,255]]
+        if (self.points[0][0]!=0):
+            self.points.insert(0,[0,0])
+        if (self.points[-1][0]!=255):
+            self.points.append([255,255])
+        self.manual_transformation()
+        self.manualWindow.destroy()
+
+
+    def manual_transformation(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
+        self.currentimage = c.linear_transformation(self.currentimage,self.points)
+        self.updateStats()
+        self.writeConsole("Manual_transformation applied.\n")
 
     def median_callback(self):
         self.previousimage = self.currentimage
