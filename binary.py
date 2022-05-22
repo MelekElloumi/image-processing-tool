@@ -42,7 +42,7 @@ def thresholding(image):
         if f < fmin:
             fmin = f
             thmin = i
-    return binarize(image, thmin)
+    return binarize(image, thmin),thmin
 
 
 def dilatation(image, size):

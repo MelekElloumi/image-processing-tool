@@ -52,6 +52,7 @@ class Interface:
         menubar.add_cascade(label="Filters", menu=menuFilter)
 
         menuBinary = tk.Menu(menubar, tearoff=0)
+        menuBinary.add_command(label="Manual Thresholding", command=self.manualthresholding_callback)
         menuBinary.add_command(label="Thresholding", command=self.thresholding_callback)
         menuBinary.add_separator()
         menuBinary.add_command(label="Dilatation", command=self.dilatation_callback)
@@ -96,11 +97,17 @@ class Interface:
         ttk.Separator(Frametools, orient='horizontal').pack(fill='x', pady=5)
 
         Framesize = tk.Frame(Frametools, height=100, width=100, pady=5)
-        tk.Label(Framesize, text="Size of filters,local equalisation and binary operations:").grid(row=0, column=0,
+        tk.Label(Framesize, text="Size of filters,local equalisation and binary operations: ").grid(row=0, column=0,
                                                                                                    padx=10)
         self.size_num = tk.Spinbox(Framesize, width=3, from_=3, to=29, increment=2)
         self.size_num.grid(row=0, column=2)
         Framesize.pack(anchor=tk.NW)
+
+        Framethreshold = tk.Frame(Frametools, height=100, width=100, pady=5)
+        tk.Label(Framethreshold, text="Manual threshold value: ").grid(row=0, column=0, padx=10)
+        self.thresh_slider = tk.Scale(Framethreshold, from_=0, to=0,length=150,tickinterval=0, orient=tk.HORIZONTAL)
+        self.thresh_slider.grid(row=0, column=2)
+        Framethreshold.pack(anchor=tk.NW)
 
         ttk.Separator(Frametools, orient='horizontal').pack(fill='x', pady=5)
         tk.Label(Frametools, text="Image properties:").pack(anchor=tk.NW)
@@ -204,6 +211,8 @@ class Interface:
             io.read(self.entry_text.get())
             self.original_button.config(state=tk.NORMAL)
             self.undo_button.config(state=tk.DISABLED)
+            self.thresh_slider.config(to=s.graylevel,tickinterval=s.graylevel//4+1)
+            self.thresh_slider.set(s.graylevel//2+1)
             self.currentimage = s.image_orig.copy()
             self.updateStats()
             self.writeConsole("New image opened.\n")
@@ -318,12 +327,20 @@ class Interface:
         self.updateStats()
         self.writeConsole("Prewitt filter applied.\n")
 
+    def manualthresholding_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
+        self.currentimage = b.binarize(self.currentimage,self.thresh_slider.get())
+        self.updateStats()
+        self.writeConsole("Manual thresholding applied.\n")
+
     def thresholding_callback(self):
         self.previousimage = self.currentimage
         self.undo_button.config(state=tk.NORMAL)
-        self.currentimage = b.thresholding(self.currentimage)
+        self.currentimage,thmin = b.thresholding(self.currentimage)
+        self.thresh_slider.set(thmin)
         self.updateStats()
-        self.writeConsole("Thresholding applied.\n")
+        self.writeConsole(f"Thresholding applied with the threshold: {thmin}.\n")
 
     def dilatation_callback(self):
         self.previousimage = self.currentimage
