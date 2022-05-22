@@ -25,6 +25,7 @@ class Interface:
         self.menu_initialisation()
         self.window.geometry(f'{self.window.winfo_screenwidth() - 100}x{self.window.winfo_screenheight() - 100}+10+10')
         self.currentimage = []
+        self.previousimage = []
 
     def menu_initialisation(self):
         menubar = tk.Menu(self.window)
@@ -88,6 +89,9 @@ class Interface:
         self.original_button = tk.Button(Frameopensave, text="Original", state=tk.DISABLED, padx=10, pady=5,
                                          command=self.originalButton_callback)
         self.original_button.grid(row=0, column=2, padx=10)
+        self.undo_button = tk.Button(Frameopensave, text="Undo", state=tk.DISABLED, padx=10, pady=5,
+                                         command=self.undoButton_callback)
+        self.undo_button.grid(row=0, column=3, padx=10)
         Frameopensave.pack(anchor=tk.NW)
 
         ttk.Separator(Frametools, orient='horizontal').pack(fill='x', pady=5)
@@ -200,6 +204,7 @@ class Interface:
         try:
             io.read(self.entry_text.get())
             self.original_button.config(state=tk.NORMAL)
+            self.undo_button.config(state=tk.DISABLED)
             self.currentimage = s.image_orig.copy()
             self.updateStats()
             self.writeConsole("New image opened.\n")
@@ -218,101 +223,147 @@ class Interface:
         self.console.config(state=tk.NORMAL)
 
     def originalButton_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = s.image_orig.copy()
         self.updateStats()
         self.writeConsole("Reverted to original image.\n")
 
+    def undoButton_callback(self):
+        self.currentimage = self.previousimage
+        self.undo_button.config(state=tk.DISABLED)
+        self.updateStats()
+        self.writeConsole("Undo to previous image.\n")
+
     def equalisation_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = c.equalization(self.currentimage)
         self.updateStats()
         self.writeConsole("Equalisation applied.\n")
 
     def local_equalisation_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = c.local_equalization(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Local equalisation applied.\n")
 
     def darkd_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = c.dark_dilatation(self.currentimage)
         self.updateStats()
         self.writeConsole("Dark dilatation applied.\n")
 
     def lightd_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = c.light_dilatation(self.currentimage)
         self.updateStats()
         self.writeConsole("Light dilatation applied.\n")
 
     def middled_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = c.middle_dilatation(self.currentimage)
         self.updateStats()
         self.writeConsole("Middle dilatation applied.\n")
 
     def inverse_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = c.inverse(self.currentimage)
         self.updateStats()
         self.writeConsole("Inversion applied.\n")
 
     def median_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = f.filter_median(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Median filter applied.\n")
 
     def average_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = f.filter_average(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Average filter applied.\n")
 
     def gaussian_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = f.filter_gauss(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Gaussian filter applied.\n")
 
     def high_boost_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = f.filter_highboost(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("High boost filter applied.\n")
 
     def laplace_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = f.filter_laplace(self.currentimage)
         self.updateStats()
         self.writeConsole("Laplace filter applied.\n")
 
     def prewitth_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = f.filter_prewitt_h(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Prewitt horizontal filter applied.\n")
 
     def prewittv_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = f.filter_prewitt_v(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Prewitt vertical filter applied.\n")
 
     def thresholding_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = b.thresholding(self.currentimage)
         self.updateStats()
         self.writeConsole("Thresholding applied.\n")
 
     def dilatation_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = b.dilatation(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Dilatation applied.\n")
 
     def erosion_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = b.erosion(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Erosion applied.\n")
 
     def closing_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = b.closing(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Closing applied.\n")
 
     def opening_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = b.opening(self.currentimage, int(self.size_num.get()))
         self.updateStats()
         self.writeConsole("Opening applied.\n")
 
     def noise_callback(self):
+        self.previousimage = self.currentimage
+        self.undo_button.config(state=tk.NORMAL)
         self.currentimage = utils.noise(self.currentimage, s.width, s.height, s.graylevel)
         self.updateStats()
         self.writeConsole("Noise applied.\n")
