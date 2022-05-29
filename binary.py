@@ -55,7 +55,6 @@ def dilatation(image, size):
             for py in range(max(0, h - size // 2), min(s.height, h + size // 2 + 1)):
                 for px in range(max(0, w - size // 2), min(s.width, w + size // 2 + 1)):
                     mintab.append(image[py][px])
-            jiik
             new_image[h][w] = mintab[0]
     return new_image
 

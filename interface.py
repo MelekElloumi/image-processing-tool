@@ -4,8 +4,10 @@ import imageIO as io
 import contrast as c
 import stats as st
 import binary as b
+import utils as u
 
 import matplotlib
+import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import tkinter as tk
@@ -72,7 +74,7 @@ class Interface:
 
         self.window.config(menu=self.menubar)
 
-        Frametools = tk.Frame(self.window, width=self.window.winfo_screenwidth() * 0.2)
+        Frametools = tk.Frame(self.window, width=self.window.winfo_screenwidth() * 0.3)
         Frametools.pack_propagate(0)
         Frametools.pack(anchor=tk.W, side=tk.LEFT, fill=tk.Y, expand=tk.YES)
 
@@ -159,15 +161,18 @@ class Interface:
         self.SNR_text.grid(row=0, column=2)
         FrameSNR.pack(anchor=tk.NW)
 
-        FrameHistogram = tk.Frame(Frametools, width=self.window.winfo_screenwidth() * 0.2, height=300, pady=5)
+        FrameHistogram = tk.Frame(Frametools, width=self.window.winfo_screenwidth() * 0.3, height=300, pady=5)
         tk.Label(FrameHistogram, text="Histogram:").pack(padx=10)
-        self.fig2 = Figure(figsize=(6, 5), dpi=100)
+        self.fig2 = Figure(figsize=(5, 5), dpi=100)
         self.ax2 = self.fig2.add_subplot(111)
+        self.ax4 = self.ax2.twinx()
+        self.fig2.tight_layout()
+        #self.ax3 = self.fig2.add_subplot(212)
         canvas2 = FigureCanvasTkAgg(self.fig2, FrameHistogram)
         plot_widget2 = canvas2.get_tk_widget()
-        plot_widget2.config(width=self.window.winfo_screenwidth() * 0.2, height=300)
+        plot_widget2.config(width=self.window.winfo_screenwidth() * 0.3, height=300)
         plot_widget2.pack(expand=tk.YES, anchor=tk.CENTER, pady=5, padx=5)
-        FrameHistogram.pack_propagate(0)
+        FrameHistogram.pack_propagate(True)
         FrameHistogram.pack(anchor=tk.NW)
 
         FrameConsole = tk.Frame(Frametools, height=100, width=100, pady=5)
@@ -176,8 +181,8 @@ class Interface:
         self.console.pack()
         FrameConsole.pack(anchor=tk.S, side=tk.BOTTOM)
 
-        self.imageframe = tk.Frame(self.window, width=self.window.winfo_screenwidth() * 0.8)
-        self.imageframe.pack_propagate(0)
+        self.imageframe = tk.Frame(self.window, width=self.window.winfo_screenwidth() * 0.7)
+        self.imageframe.pack_propagate(False)
         self.imageframe.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.fig1 = Figure(figsize=(6, 5), dpi=100)
@@ -205,7 +210,14 @@ class Interface:
 
     def displayHistogram(self):
         self.ax2.clear()
-        self.ax2.plot(st.histogram(self.currentimage))
+        self.ax4.clear()
+        #self.ax3.clear()
+        flat_image = u.matrixToArray(self.currentimage,s.height,s.width)
+        self.ax2.hist(flat_image, bins=s.graylevel, color='skyblue')
+        self.ax2.set_xlabel('Grey level')
+        self.ax2.set_ylabel('Number of points')
+        self.ax4.hist(flat_image, bins=s.graylevel, cumulative=True, histtype='step', density=True, color='blue')
+        self.ax4.set_ylabel('Cumulitive percentage')
         self.fig2.canvas.draw()
 
     def openButton_callback(self):
@@ -305,8 +317,8 @@ class Interface:
         self.entry_Y = tk.IntVar()
         self.entry_Y.set(0)
         tk.Entry(Framepoint, width=5, textvariable=self.entry_Y).grid(row=0, column=3, padx=10)
-        point_button = tk.Button(Framepoint, text="Add point", padx=10, pady=5,
-                                  command=self.add_point_callback).grid(row=0, column=4, padx=10)
+        tk.Button(Framepoint, text="Add point", padx=10, pady=5,
+                  command=self.add_point_callback).grid(row=0, column=4, padx=10)
         Framepoint.pack()
 
         self.fig3 = Figure(figsize=(6, 5), dpi=100)
