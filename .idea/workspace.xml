@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bc9bf61b-c314-431b-ab0e-d88754f50c73" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/image_processing_tool.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/image_processing_tool.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="bc9bf61b-c314-431b-ab0e-d88754f50c73" name="Changes" comment="added cumulative histogram in UI">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/binary.py" beforeDir="false" afterPath="$PROJECT_DIR$/binary.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imageIO.py" beforeDir="false" afterPath="$PROJECT_DIR$/imageIO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/input/examplePPM.ppm" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,8 +76,16 @@
       <updated>1653760036693</updated>
       <workItem from="1653760037845" duration="4582000" />
       <workItem from="1653783945491" duration="619000" />
-      <workItem from="1653814130374" duration="4626000" />
+      <workItem from="1653814130374" duration="19910000" />
     </task>
+    <task id="LOCAL-00001" summary="added cumulative histogram in UI">
+      <created>1653818939842</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1653818939842</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -91,7 +102,11 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added cumulative histogram in UI" />
+    <option name="LAST_COMMIT_MESSAGE" value="added cumulative histogram in UI" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Image_Processing_Tool$main.coverage" NAME="main Coverage Results" MODIFIED="1653818520365" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Image_Processing_Tool$main.coverage" NAME="main Coverage Results" MODIFIED="1653836359435" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

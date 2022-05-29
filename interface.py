@@ -7,7 +7,6 @@ import binary as b
 import utils as u
 
 import matplotlib
-import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import tkinter as tk
@@ -57,13 +56,26 @@ class Interface:
 
         menuBinary = tk.Menu(self.menubar, tearoff=0)
         menuBinary.add_command(label="Manual Thresholding", command=self.manualthresholding_callback)
-        menuBinary.add_command(label="Thresholding", command=self.thresholding_callback)
+        menuBinary.add_command(label="Otsu Thresholding", command=self.thresholding_callback)
         menuBinary.add_separator()
         menuBinary.add_command(label="Dilatation", command=self.dilatation_callback)
         menuBinary.add_command(label="Erosion", command=self.erosion_callback)
         menuBinary.add_command(label="Closing", command=self.closing_callback)
         menuBinary.add_command(label="Opening", command=self.opening_callback)
         self.menubar.add_cascade(label="Binary", menu=menuBinary)
+
+        menuColour = tk.Menu(self.menubar, tearoff=0)
+        menuColour.add_command(label="Manual Thresholding ET", command=self.manualthresholdingCouleurET_callback)
+        menuColour.add_command(label="Manual Thresholding OU", command=self.manualthresholdingCouleurOU_callback)
+        menuColour.add_separator()
+        menuColour.add_command(label="Otsu Thresholding ET", command=self.thresholdingCouleurET_callback)
+        menuColour.add_command(label="Otsu Thresholding OU", command=self.thresholdingCouleurOU_callback)
+        menuColour.add_separator()
+        menuColour.add_command(label="Dilatation", command=self.dilatation_callback)
+        menuColour.add_command(label="Erosion", command=self.erosion_callback)
+        menuColour.add_command(label="Closing", command=self.closing_callback)
+        menuColour.add_command(label="Opening", command=self.opening_callback)
+        self.menubar.add_cascade(label="Colour", menu=menuColour)
 
         menuOther = tk.Menu(self.menubar, tearoff=0)
         menuOther.add_command(label="Add noise", command=self.noise_callback)
@@ -203,7 +215,18 @@ class Interface:
         self.displayHistogram()
         self.displayImage()
 
+    def updateStatsColour(self):
+        self.width_text.config(text=str(s.width))
+        self.height_text.config(text=str(s.height))
+        self.pixel_text.config(text=str(st.nbPixels()))
+        self.displayImageColour()
+
     def displayImage(self):
+        self.ax1.clear()
+        self.ax1.imshow(self.currentimage, cmap='gray')
+        self.fig1.canvas.draw()
+
+    def displayImageColour(self):
         self.ax1.clear()
         self.ax1.imshow(self.currentimage, cmap='gray')
         self.fig1.canvas.draw()
@@ -211,7 +234,6 @@ class Interface:
     def displayHistogram(self):
         self.ax2.clear()
         self.ax4.clear()
-        #self.ax3.clear()
         flat_image = u.matrixToArray(self.currentimage,s.height,s.width)
         self.ax2.hist(flat_image, bins=s.graylevel, color='skyblue')
         self.ax2.set_xlabel('Grey level')
@@ -227,11 +249,15 @@ class Interface:
             self.undo_button.config(state=tk.DISABLED)
             self.thresh_slider.config(to=s.graylevel,tickinterval=s.graylevel//4+1)
             self.thresh_slider.set(s.graylevel//2+1)
-            self.currentimage = s.image_orig.copy()
-            self.updateStats()
+            if s.colour:
+                self.currentimage = s.image_orig
+                self.updateStatsColour()
+            else:
+                self.currentimage = s.image_orig.copy()
+                self.updateStats()
             self.writeConsole("New image opened.\n")
         except Exception:
-            self.writeConsole('readError: error with ' + self.entry_text.get() + ': has wrong type or size.\n')
+             self.writeConsole('readError: error with ' + self.entry_text.get() + ': has wrong type or size.\n')
         except FileNotFoundError:
             self.writeConsole("File not found, try again.\n")
 
@@ -416,13 +442,33 @@ class Interface:
         self.updateStats()
         self.writeConsole("Manual thresholding applied.\n")
 
+    def manualthresholdingCouleurET_callback(self):
+        self.currentimage = b.binarizeColour(self.currentimage,self.thresh_slider.get(),self.thresh_slider.get(),self.thresh_slider.get(),"AND")
+        self.updateStatsColour()
+        self.writeConsole("Manual thresholding ET applied.\n")
+
+    def manualthresholdingCouleurOU_callback(self):
+        self.currentimage = b.binarizeColour(self.currentimage, self.thresh_slider.get(),self.thresh_slider.get(),self.thresh_slider.get(), "OR")
+        self.updateStatsColour()
+        self.writeConsole("Manual thresholding OU applied.\n")
+
+    def thresholdingCouleurET_callback(self):
+        self.currentimage,thR,thG,thB = b.thresholdingColour(self.currentimage, "AND")
+        self.updateStatsColour()
+        self.writeConsole(f"Otsu Thresholding OU applied with the thresholds: R {thR} G {thG} B {thB}.\n")
+
+    def thresholdingCouleurOU_callback(self):
+        self.currentimage,thR,thG,thB = b.thresholdingColour(self.currentimage, "OR")
+        self.updateStatsColour()
+        self.writeConsole(f"Otsu Thresholding OU applied with the thresholds: R {thR} G {thG} B {thB}.\n")
+
     def thresholding_callback(self):
         self.previousimage = self.currentimage
         self.undo_button.config(state=tk.NORMAL)
         self.currentimage,thmin = b.thresholding(self.currentimage)
         self.thresh_slider.set(thmin)
         self.updateStats()
-        self.writeConsole(f"Thresholding applied with the threshold: {thmin}.\n")
+        self.writeConsole(f"Otsu Thresholding applied with the threshold: {thmin}.\n")
 
     def dilatation_callback(self):
         self.previousimage = self.currentimage

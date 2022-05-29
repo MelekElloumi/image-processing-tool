@@ -1,20 +1,19 @@
 import settings as s
 import utils
-
+import cv2
 
 def read(filepath):
     type = readType(filepath)
     if (type == None):
         raise Exception
     if (type == "P2\n"):
-        imageread, s.width, s.height, s.graylevel = readPGMascii(filepath)
+        imageread, s.width, s.height, s.graylevel, s.colour = readPGMascii(filepath)
+    elif (type == "P5\n"):
+        imageread, s.width, s.height, s.graylevel, s.colour = readPGMbinary(filepath)
     else:
-        imageread, s.width, s.height, s.graylevel = readPGMbinary(filepath)
-    if (imageread == None):
-        raise Exception
-    else:
-        s.isread = True
-        s.image_orig = utils.arrayToMatrix(imageread, s.width, s.height)
+        imageread, s.width, s.height, s.graylevel, s.colour = readPPM(filepath)
+    s.isread = True
+    s.image_orig = utils.arrayToMatrix(imageread, s.height, s.width,s.colour)
 
 
 def readType(filepath):
@@ -24,7 +23,7 @@ def readType(filepath):
     except UnicodeDecodeError:
         file = open(filepath, 'rb')
         type = file.readline().decode()
-    if not ("P2" in type or "P5" in type):
+    if not ("P2" in type or "P5" in type or "P3" in type or "P6" in type):
         file.close()
         return None
     file.close()
@@ -48,8 +47,7 @@ def readPGMascii(filepath):
         file.close()
         return None, -1, -1, -1
     file.close()
-    return imageread, dimx, dimy, nivg
-
+    return imageread, dimx, dimy, nivg, False
 
 def readPGMbinary(filepath):
     file = open(filepath, 'rb')
@@ -60,13 +58,25 @@ def readPGMbinary(filepath):
     dimx, dimy = line.split()
     dimx, dimy = int(dimx), int(dimy)
     nivg = int(file.readline().decode())
-    imageread = []
     imageread = list(file.read(dimx * dimy))
     if len(imageread) != dimx * dimy:
         file.close()
         return None, -1, -1, -1
     file.close()
-    return imageread, dimx, dimy, nivg
+    return imageread, dimx, dimy, nivg, False
+
+def readPPM(filepath):
+    file = open(filepath, 'r')
+    file.readline()
+    while True:
+        line = file.readline()
+        if line[0] != '#': break
+    dimx, dimy = line.split()
+    dimx, dimy = int(dimx), int(dimy)
+    nivg = int(file.readline())
+    file.close()
+    imageread = cv2.imread(filepath)
+    return imageread, dimx, dimy, nivg, True
 
 
 def write(filepath, image):

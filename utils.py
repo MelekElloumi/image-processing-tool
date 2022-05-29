@@ -1,14 +1,18 @@
 import random
 
 
-def arrayToMatrix(Array, height, width):
-    Matrix = []
-    for w in range(width):
-        Row = []
+def arrayToMatrix(Array, height, width,colour):
+    if not colour:
+        Matrix = []
         for h in range(height):
-            Row.append(Array[w * height + h])
-        Matrix.append(Row)
-    return Matrix
+            Row = []
+            for w in range(width):
+                Row.append(Array[h * width + w])
+            Matrix.append(Row)
+        return Matrix
+    else:
+        return Array
+
 
 
 def matrixToArray(Matrix, height, width):

@@ -1,7 +1,7 @@
 # Image Processing Tool 
 
-- This is a Python application that lets you open .pgm files and edit them.
-- Edits include contrast manipulation, filtering and thresholding functions.
+- This is a Python application that lets you open .pgm image files and edit them.
+- Edits include contrast manipulation, filtering and thresholding functions (mainly grayscale processing)
 - You can also add random noise and generate an ascii art from you image (find it in output folder)
 - To execute it, run the image_processing_tool.bat file.
 
@@ -18,7 +18,5 @@
 - You can find sample images in the input folder (including me)
 - The application can read ascii and binary pgm files. It saves in ascii mode.
 - To add your photo, you can convert a jpeg to pgm in this online [converter](https://convertio.co/fr/jpg-pgm/).
+- It can also read ppm files but it's limited, only colour thresholding can be applied.
 
-#### Ascii art 
-- lena.pgm in ascii form
-![Imgur](https://i.imgur.com/7khn6Wt.png)
