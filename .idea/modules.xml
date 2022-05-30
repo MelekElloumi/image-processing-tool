@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../Data-Science-Lab/Deep_Learning/Deep_Learning_Fundamentals/.idea/Deep_Learning_Fundamentals.iml" filepath="$PROJECT_DIR$/../Data-Science-Lab/Deep_Learning/Deep_Learning_Fundamentals/.idea/Deep_Learning_Fundamentals.iml" />
       <module fileurl="file://$PROJECT_DIR$/../Data-Science-Lab/Deep_Learning/Macro_Facial_expression_detection/.idea/Face_recognition.iml" filepath="$PROJECT_DIR$/../Data-Science-Lab/Deep_Learning/Macro_Facial_expression_detection/.idea/Face_recognition.iml" />
+      <module fileurl="file://$USER_HOME$/Downloads/Resnet-Emotion-Recognition-master/.idea/Resnet-Emotion-Recognition-master.iml" filepath="$USER_HOME$/Downloads/Resnet-Emotion-Recognition-master/.idea/Resnet-Emotion-Recognition-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/image_processing_tool.iml" filepath="$PROJECT_DIR$/.idea/image_processing_tool.iml" />
     </modules>
   </component>

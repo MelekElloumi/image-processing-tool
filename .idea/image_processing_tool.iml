@@ -6,5 +6,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Face_recognition" />
     <orderEntry type="module" module-name="Deep_Learning_Fundamentals" />
+    <orderEntry type="module" module-name="Resnet-Emotion-Recognition-master" />
   </component>
 </module>
